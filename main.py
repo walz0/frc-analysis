@@ -25,23 +25,41 @@
 import requests
 import pprint
 
+class frc_event():
+    def __init__(self, key, name, week):
+        self.key = key 
+        self.name = name 
+        self.week = week 
+
+    def __str__(self):
+        return self.key + ": ({})".format(self.name)
+    
+    def __repr__(self):
+        return self.__str__()
+
+
 key = "Z37IOn5LR76k6oZX42Yj6qktALW6DNd1aoQMeUSGzf1EEq1Cf2yX9jJcjiiKGIDx" 
 url = "https://www.thebluealliance.com/api/v3/events/2020"
 headers = { 'X-TBA-Auth-Key' : key }
 
 response = requests.get(url, headers=headers)
 
-sus_events = []
-total_events = []
+sus_events = [] # suspended events
+com_events = [] # completed events
+all_events = [] # all events
 
 output = response.json()
 for event in output:
     if 'SUSPENDED' in event['name']:
         # remove ***SUSPENDED*** and extra space from event name
         name = event['name'][16:]
-        sus_events += [event['name']]
-    total_events += [event['name']]
+        sus_events += [frc_event(event['key'], event['name'], event['week'])]
+    else:
+        com_events += [frc_event(event['key'], event['name'], event['week'])]
+    all_events += [(event['key'], event['name'])]
 
-print("Total Events Scheduled: ", len(total_events))
+print("Total Events Scheduled: ", len(all_events))
 print("Total Events Suspended: ", len(sus_events))
-print("Percent Suspended: ", 100 * (len(sus_events) / len(total_events)))
+print("Percent Suspended: ", 100 * (len(sus_events) / len(all_events)))
+
+pprint.pprint(com_events)
