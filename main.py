@@ -26,6 +26,7 @@ import requests
 import pprint
 
 class frc_event():
+    teams = []
     def __init__(self, key, name, week):
         self.key = key 
         self.name = name 
@@ -37,29 +38,48 @@ class frc_event():
     def __repr__(self):
         return self.__str__()
 
+class frc_team():
+    def __init__(self, key, name):
+        self.key = key 
+        self.name = name 
 
-key = "Z37IOn5LR76k6oZX42Yj6qktALW6DNd1aoQMeUSGzf1EEq1Cf2yX9jJcjiiKGIDx" 
-url = "https://www.thebluealliance.com/api/v3/events/2020"
-headers = { 'X-TBA-Auth-Key' : key }
+    def __str__(self):
+        return self.key + ": ({})".format(self.name)
+    
+    def __repr__(self):
+        return self.__str__()
 
-response = requests.get(url, headers=headers)
+def callAPI(query):
+    key = "Z37IOn5LR76k6oZX42Yj6qktALW6DNd1aoQMeUSGzf1EEq1Cf2yX9jJcjiiKGIDx" 
+    url = "https://www.thebluealliance.com/api/v3/{}".format(query)
+    headers = { 'X-TBA-Auth-Key' : key }
+    response = requests.get(url, headers=headers)
+    return response.json()
 
 sus_events = [] # suspended events
 com_events = [] # completed events
 all_events = [] # all events
 
-output = response.json()
-for event in output:
+active_teams = [] # all teams that have competed in at least one event
+
+# pull all events planned for 2020
+events = callAPI('events/2020')
+for event in events:
+    # differntiate events that took place from suspended events
     if 'SUSPENDED' in event['name']:
         # remove ***SUSPENDED*** and extra space from event name
         name = event['name'][16:]
-        sus_events += [frc_event(event['key'], event['name'], event['week'])]
+        sus_events.append(frc_event(event['key'], event['name'], event['week']))
     else:
-        com_events += [frc_event(event['key'], event['name'], event['week'])]
+        com_events.append(frc_event(event['key'], event['name'], event['week']))
+        teams = callAPI('event/' + event['key'] + '/teams')
+        active_teams.append()
+
     all_events += [(event['key'], event['name'])]
 
 print("Total Events Scheduled: ", len(all_events))
 print("Total Events Suspended: ", len(sus_events))
 print("Percent Suspended: ", 100 * (len(sus_events) / len(all_events)))
 
-pprint.pprint(com_events)
+#pprint.pprint(com_events)
+pprint.pprint(active_teams)
