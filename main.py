@@ -1,4 +1,11 @@
 """
+    TODO:
+        -scraper for district data
+            -compare team counts on tba and scraper
+                -determine what teams are the discrepancy
+
+=-------------------------------------------------------------------=
+        
     start on 'initiation line'
         can be loaded with 3 'power cell' balls
         auto for first 15 seconds
@@ -51,22 +58,26 @@ class frc_team():
     def __repr__(self):
         return self.__str__()
 
-def getTotalINTeams(year):
+def getIndianaTeams(year):
+    # pull from district ranking leaderboard
     url = "http://frc-events.firstinspires.org/{}/district/IN".format(year)
     page = requests.get(url).content
     soup = BeautifulSoup(page, 'html.parser')
-    spans = soup.find_all(id='rankings')
-    spans = list(map(lambda x: x.text.rstrip(), spans))
-    return spans 
+    rows = soup.table.find_all('tr')[1:]
+    teams = []
+    for row in rows:
+        columns = row.find_all('td')
+        raw_name = columns[2].a.text.strip()
+        teams.append(frc_team('frc' + raw_name[:4].rstrip(), "", "Indiana"))
+    teamCount = len(rows) - 1 # exclude the column label row
+    return teams
 
-def callAPI(query):
+def tbaAPI(query):
     key = "Z37IOn5LR76k6oZX42Yj6qktALW6DNd1aoQMeUSGzf1EEq1Cf2yX9jJcjiiKGIDx" 
     url = "https://www.thebluealliance.com/api/v3/{}".format(query)
     headers = { 'X-TBA-Auth-Key' : key }
     response = requests.get(url, headers=headers)
     return response.json()
-
-#pprint.pprint(getTotalINTeams(2020))
 
 total_teams = 3898 # total number of active frc teams (2020)
 
@@ -75,10 +86,12 @@ com_events = [] # completed events
 all_events = [] # all events
 
 active_teams = [] # all teams that have competed in at least one event
-in_teams = [] # all indiana teams that have competed
+in_teams = []
+first_in_teams = getIndianaTeams(2020) # all indiana teams that have competed
+pprint.pprint(first_in_teams)
 
 # pull all events planned for 2020
-events = callAPI('events/2020')
+events = tbaAPI('events/2020')
 for event in events:
     # differntiate events that took place from suspended events
     if 'SUSPENDED' in event['name']:
@@ -87,7 +100,7 @@ for event in events:
         sus_events.append(frc_event(event['key'], event['name'], event['week']))
     else:
         com_events.append(frc_event(event['key'], event['name'], event['week']))
-        teams = callAPI('event/' + event['key'] + '/teams')
+        teams = tbaAPI('event/' + event['key'] + '/teams')
         for team in teams:
             obj = frc_team(team['key'], team['name'], team['state_prov'])
             if not obj in active_teams:
@@ -96,10 +109,23 @@ for event in events:
                     in_teams.append(obj)
     all_events += [(event['key'], event['name'])]
 
+keys1 = [x.key for x in first_in_teams]
+keys2 = [x.key for x in in_teams]
+
+print(keys1)
+print(keys2)
+
+for _ in keys1:
+    y = []
+    if _ in keys2:
+        y += [_]
+
+print(y)
+
 print("Total Events Scheduled: ", len(all_events))
 print("Total Events Suspended: ", len(sus_events))
-print("Percent Suspended: ", 100 * (len(sus_events) / len(all_events)))
+print("Percent Suspended: ", round(100 * (len(sus_events) / len(all_events)), 2))
 
 print("Total Teams Participated: ", len(active_teams))
-print("Total Percent Participated: ", 100 * (len(active_teams) / total_teams))
+print("Total Percent Participated: ", round(100 * (len(active_teams) / total_teams), 2))
 print("Total Indiana Teams Participated: ", len(in_teams))
