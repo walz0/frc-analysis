@@ -23,6 +23,7 @@
 """
 
 import requests
+from bs4 import BeautifulSoup
 import pprint
 
 class frc_event():
@@ -50,12 +51,22 @@ class frc_team():
     def __repr__(self):
         return self.__str__()
 
+def getTotalINTeams(year):
+    url = "http://frc-events.firstinspires.org/{}/district/IN".format(year)
+    page = requests.get(url).content
+    soup = BeautifulSoup(page, 'html.parser')
+    spans = soup.find_all(id='rankings')
+    spans = list(map(lambda x: x.text.rstrip(), spans))
+    return spans 
+
 def callAPI(query):
     key = "Z37IOn5LR76k6oZX42Yj6qktALW6DNd1aoQMeUSGzf1EEq1Cf2yX9jJcjiiKGIDx" 
     url = "https://www.thebluealliance.com/api/v3/{}".format(query)
     headers = { 'X-TBA-Auth-Key' : key }
     response = requests.get(url, headers=headers)
     return response.json()
+
+#pprint.pprint(getTotalINTeams(2020))
 
 total_teams = 3898 # total number of active frc teams (2020)
 
@@ -89,8 +100,6 @@ print("Total Events Scheduled: ", len(all_events))
 print("Total Events Suspended: ", len(sus_events))
 print("Percent Suspended: ", 100 * (len(sus_events) / len(all_events)))
 
-#pprint.pprint(com_events)
-#pprint.pprint(active_teams)
 print("Total Teams Participated: ", len(active_teams))
 print("Total Percent Participated: ", 100 * (len(active_teams) / total_teams))
 print("Total Indiana Teams Participated: ", len(in_teams))
