@@ -12,6 +12,9 @@ Total Teams Participated:  2183
 Total Percent Participated:  56.0
 Total Indiana Teams Participated:  35
 
+FRC Data error:
+    frc135, frc3494, frc829
+
 =-------------------------------------------------------------------=
         
     start on 'initiation line'
@@ -136,27 +139,10 @@ def tbaAPI(query):
 
 total_teams = 3898 # total number of active frc teams (2020)
 
-first_in_teams = getIndianaTeams(2020) # all indiana teams that have competed
-#pprint.pprint(first_in_teams)
 
-# pull all events planned for 2020
-#events = tbaAPI('events/2020')
-#for event in events:
-#    # differntiate events that took place from suspended events
-#    if 'SUSPENDED' in event['name']:
-#        # remove ***SUSPENDED*** and extra space from event name
-#        name = event['name'][16:]
-#        sus_events.append(frc_event(event['key'], event['name'], event['week']))
-#    else:
-#        com_events.append(frc_event(event['key'], event['name'], event['week']))
-#        teams = tbaAPI('event/' + event['key'] + '/teams')
-#        for team in teams:
-#            obj = frc_team(team['key'], team['name'], team['state_prov'])
-#            if not obj in active_teams:
-#                active_teams.append(obj)
-#                if obj.state == "Indiana":
-#                    in_teams.append(obj)
-#    all_events += [(event['key'], event['name'])]
+
+
+
 
 print(len(in_teams))
 print(len(first_in_teams))
