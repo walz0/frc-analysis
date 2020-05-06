@@ -4,6 +4,14 @@
             -compare team counts on tba and scraper
                 -determine what teams are the discrepancy
 
+
+Total Events Scheduled:  193
+Total Events Suspended:  131
+Percent Suspended:  67.88
+Total Teams Participated:  2183
+Total Percent Participated:  56.0
+Total Indiana Teams Participated:  35
+
 =-------------------------------------------------------------------=
         
     start on 'initiation line'
@@ -66,9 +74,12 @@ def getIndianaTeams(year):
     rows = soup.table.find_all('tr')[1:]
     teams = []
     for row in rows:
-        columns = row.find_all('td')
-        raw_name = columns[2].a.text.strip()
-        teams.append(frc_team('frc' + raw_name[:4].rstrip(), "", "Indiana"))
+        td = row.find_all('td')
+        td = [x.text.strip() for x in td]
+        raw_name = td[2]
+        played = not (td[3] == td[4])
+        if played:
+            teams.append(frc_team('frc' + raw_name[:4].rstrip(), "", "Indiana"))
     teamCount = len(rows) - 1 # exclude the column label row
     return teams
 
@@ -88,7 +99,7 @@ all_events = [] # all events
 active_teams = [] # all teams that have competed in at least one event
 in_teams = []
 first_in_teams = getIndianaTeams(2020) # all indiana teams that have competed
-pprint.pprint(first_in_teams)
+#pprint.pprint(first_in_teams)
 
 # pull all events planned for 2020
 events = tbaAPI('events/2020')
@@ -109,23 +120,25 @@ for event in events:
                     in_teams.append(obj)
     all_events += [(event['key'], event['name'])]
 
-keys1 = [x.key for x in first_in_teams]
-keys2 = [x.key for x in in_teams]
+print(len(in_teams))
+print(len(first_in_teams))
 
-print(keys1)
-print(keys2)
+outliers = []
+in_teams_keys = [team.key for team in in_teams]
+first_in_teams_keys = [team.key for team in first_in_teams]
+pprint.pprint(in_teams_keys)
+pprint.pprint(first_in_teams_keys)
 
-for _ in keys1:
-    y = []
-    if _ in keys2:
-        y += [_]
+for key in in_teams_keys:
+    if not key in first_in_teams_keys:
+        outliers += [key]
 
-print(y)
+print(outliers)
 
-print("Total Events Scheduled: ", len(all_events))
-print("Total Events Suspended: ", len(sus_events))
-print("Percent Suspended: ", round(100 * (len(sus_events) / len(all_events)), 2))
-
-print("Total Teams Participated: ", len(active_teams))
-print("Total Percent Participated: ", round(100 * (len(active_teams) / total_teams), 2))
-print("Total Indiana Teams Participated: ", len(in_teams))
+#print("Total Events Scheduled: ", len(all_events))
+#print("Total Events Suspended: ", len(sus_events))
+#print("Percent Suspended: ", round(100 * (len(sus_events) / len(all_events)), 2))
+#
+#print("Total Teams Participated: ", len(active_teams))
+#print("Total Percent Participated: ", round(100 * (len(active_teams) / total_teams), 2))
+#print("Total Indiana Teams Participated: ", len(in_teams))
