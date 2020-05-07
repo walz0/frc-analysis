@@ -71,6 +71,12 @@ class frc_team():
     def __repr__(self):
         return self.__str__()
 
+def tbaAPI(query):
+    key = "Z37IOn5LR76k6oZX42Yj6qktALW6DNd1aoQMeUSGzf1EEq1Cf2yX9jJcjiiKGIDx" 
+    url = "https://www.thebluealliance.com/api/v3/{}".format(query)
+    headers = { 'X-TBA-Auth-Key' : key }
+    response = requests.get(url, headers=headers)
+    return response.json()
 
 # get data from FIRST official leaderboard, incorrect data
 def getIndianaTeams(year):
@@ -91,30 +97,78 @@ def getIndianaTeams(year):
     return teams
 
 
-# get all indiana teams that have competed in a given year
-def getINTeams(year):
-    in_teams = []
-    active_teams = []
+# get all teams registered from a given state in a given year
+def getStateTeams(state_prov, year):
+    output = []
 
-    # pull all events completed for 2020
-    events = getEvents(2020)
+    # pull all events completed for given year as frc_event objects
+    events = getAllEvents(year)
     for event in events:
         # differentiate events that took place from suspended events
-        teams = tbaAPI('event/' + event['key'] + '/teams')
+        teams = tbaAPI('event/' + event.key + '/teams')
         for team in teams:
             team_obj = frc_team(team['key'], team['name'], team['state_prov'])
-            if not team_obj in active_teams:
-                active_teams.append(team_obj)
-                if obj.state == "Indiana":
-                    in_teams.append(team_obj)
-    return in_teams
+            if not team_obj in output:
+                if team_obj.state == state_prov:
+                    output.append(team_obj)
+    return output
+
+
+# get all teams from a given state in a given year who have competed
+def getCompetedStateTeams(state_prov, year):
+    output = []
+
+    # pull all events completed for given year as frc_event objects
+    events = getCompletedEvents(year)
+    for event in events:
+        # differentiate events that took place from suspended events
+        teams = tbaAPI('event/' + event.key + '/teams')
+        for team in teams:
+            team_obj = frc_team(team['key'], team['name'], team['state_prov'])
+            if not team_obj in output:
+                if team_obj.state == state_prov:
+                    output.append(team_obj)
+    return output 
+
+
+def getAllTeams(year):
+    events = getAllEvents(year)
+    #for event in events:
+    pass
+
+
+# get all events scheduled for a given year
+def getAllEvents(year): 
+    events = tbaAPI('events/' + str(year))
+    output = [frc_event(event['key'], event['name'], event['week']) for event in events]
+    return output
+
+
+def eventCount(year):
+    return len(getAllEvents(year))
 
 
 # get all completed events for a given year
-def getEvents(year):
+def getCompletedEvents(year):
     sus_events = [] # suspended events
     com_events = [] # completed events
-    all_events = [] # all events
+
+    # pull all events planned for 2020
+    events = tbaAPI('events/' + str(year))
+    for event in events:
+        # differentiate events that took place from suspended events
+        if 'SUSPENDED' in event['name']:
+            # remove ***SUSPENDED*** and extra space from event name
+            name = event['name'][16:]
+            sus_events.append(frc_event(event['key'], event['name'], event['week']))
+        else:
+            com_events.append(frc_event(event['key'], event['name'], event['week']))
+    return com_events
+
+
+def getSuspendedEvents(year):
+    sus_events = [] # suspended events
+    com_events = [] # completed events
 
     # pull all events planned for 2020
     events = tbaAPI('events/2020')
@@ -126,38 +180,13 @@ def getEvents(year):
             sus_events.append(frc_event(event['key'], event['name'], event['week']))
         else:
             com_events.append(frc_event(event['key'], event['name'], event['week']))
-        all_events += [(event['key'], event['name'])]
-    return all_events
-
-
-def tbaAPI(query):
-    key = "Z37IOn5LR76k6oZX42Yj6qktALW6DNd1aoQMeUSGzf1EEq1Cf2yX9jJcjiiKGIDx" 
-    url = "https://www.thebluealliance.com/api/v3/{}".format(query)
-    headers = { 'X-TBA-Auth-Key' : key }
-    response = requests.get(url, headers=headers)
-    return response.json()
+    return sus_events
+   
 
 total_teams = 3898 # total number of active frc teams (2020)
 
-
-
-
-
-
-print(len(in_teams))
-print(len(first_in_teams))
-
-outliers = []
-in_teams_keys = [team.key for team in in_teams]
-first_in_teams_keys = [team.key for team in first_in_teams]
-pprint.pprint(in_teams_keys)
-pprint.pprint(first_in_teams_keys)
-
-for key in in_teams_keys:
-    if not key in first_in_teams_keys:
-        outliers += [key]
-
-print(outliers)
+pprint.pprint(getStateTeams('Indiana', 2020))
+#print(getStateTeams('Indiana', 2020))
 
 #print("Total Events Scheduled: ", len(all_events))
 #print("Total Events Suspended: ", len(sus_events))
