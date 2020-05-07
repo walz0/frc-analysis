@@ -71,12 +71,14 @@ class frc_team():
     def __repr__(self):
         return self.__str__()
 
+
 def tbaAPI(query):
     key = "Z37IOn5LR76k6oZX42Yj6qktALW6DNd1aoQMeUSGzf1EEq1Cf2yX9jJcjiiKGIDx" 
     url = "https://www.thebluealliance.com/api/v3/{}".format(query)
     headers = { 'X-TBA-Auth-Key' : key }
     response = requests.get(url, headers=headers)
     return response.json()
+
 
 # get data from FIRST official leaderboard, incorrect data
 def getIndianaTeams(year):
@@ -100,7 +102,6 @@ def getIndianaTeams(year):
 # get all teams registered from a given state in a given year
 def getStateTeams(state_prov, year):
     output = []
-
     # pull all events completed for given year as frc_event objects
     events = getAllEvents(year)
     for event in events:
@@ -117,7 +118,6 @@ def getStateTeams(state_prov, year):
 # get all teams from a given state in a given year who have competed
 def getCompetedStateTeams(state_prov, year):
     output = []
-
     # pull all events completed for given year as frc_event objects
     events = getCompletedEvents(year)
     for event in events:
@@ -130,11 +130,25 @@ def getCompetedStateTeams(state_prov, year):
                     output.append(team_obj)
     return output 
 
-
+"""
+    :: Gets all teams from all events in given year
+        
+    ERROR: repeated team_obj, maybe duplicate events?
+            look into threads / parallel calls / async calls
+"""
 def getAllTeams(year):
+    output = []
+    # pull all events completed for given year as frc_event objects
     events = getAllEvents(year)
-    #for event in events:
-    pass
+    for event in events:
+        # differentiate events that took place from suspended events
+        teams = tbaAPI('event/' + event.key + '/teams')
+        for team in teams:
+            team_obj = frc_team(team['key'], team['name'], team['state_prov'])
+            if not team_obj.key in [o.key for o in output]:
+                output.append(team_obj)
+                print(team_obj)
+    return output 
 
 
 # get all events scheduled for a given year
@@ -185,7 +199,7 @@ def getSuspendedEvents(year):
 
 total_teams = 3898 # total number of active frc teams (2020)
 
-pprint.pprint(getStateTeams('Indiana', 2020))
+pprint.pprint(getAllTeams(2020))
 #print(getStateTeams('Indiana', 2020))
 
 #print("Total Events Scheduled: ", len(all_events))
