@@ -40,16 +40,61 @@
                 What we can do now is take a look at the data and assess our situation from afar to gain some
                 insight on the regions most affected.
             </p>
-            <p class="disclaimer" style="margin: 100px 400px 50px 400px; text-align: center;">Written by Aidan Walz, Team 5484 alumni - 2020</p>
+            <div class="search-container">
+                <input type="text" id="search" onkeyup="fillDropdown(document.getElementById('search').value)" autocomplete="off"></input>
+            </div>
+            <p class="disclaimer" style="margin: 100px 21vw 50px 21vw; text-align: center;">Written by Aidan Walz, Team 5484 alumni - 2020</p>
         </div>
         <script>
+            var raw_json = []
+            function setJSON(json) {
+                raw_json = json;
+            }
+
+            function getTerritoryNames() {
+                var keyList = [];
+                for (key in raw_json) {
+                    keyList.push(key)
+                }
+                keyList.sort();
+                return keyList;
+            }
+
+            function fillDropdown(query) {
+                var keys = getTerritoryNames();
+                var search = document.getElementById('search');
+                while(search.firstChild) {
+                    search.removeChild(search.lastChild);
+                }
+                if(keys.includes(query)) {
+                    var a = document.createElement('a');
+                    var text = document.createTextNode(query);
+                    a.appendChild(text);
+                    a.href = "";
+                    search.appendChild(a);
+                }
+                // for (key in keys) {
+                //     if (keys[key] == query) {
+                //         var a = document.createElement('a');
+                //         var text = document.createTextNode(keys[key]);
+                //         a.appendChild(text);
+                //         a.href = "";
+                //         search.appendChild(a);
+                //     }
+                // }
+            }
+
+            fetch('./teams_by_state.json')
+                .then(res => res.json())
+                .then(data => setJSON(data))
+                .catch(err => console.error(err));
+
             var ctx = document.getElementById('eventSuspended').getContext('2d');
             var myChart = new Chart(ctx, {
                 type: 'pie',
                 data: {
                     labels: ['Postponed', 'Completed'],
                     datasets: [{
-                        // label: 'FRC Events Scheduled',
                         data: [193, 131],
                         backgroundColor: [
                             'rgba(255, 99, 132)',
@@ -73,7 +118,6 @@
                 data: {
                     labels: ['Attended', 'Did not attend'],
                     datasets: [{
-                        // label: 'FRC Events Scheduled',
                         data: [2183, 1729],
                         backgroundColor: [
                             'rgba(255, 175, 36)',

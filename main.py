@@ -220,6 +220,7 @@ pprint.pprint(teams_dict)
 with open('teams_by_state.json', 'w') as json_file:
     json.dump(teams_dict, json_file)
 
+
 # print(len(getStateTeams('Hawaii', 2020)))
 
 # pprint.pprint(getAllTeams(2020))

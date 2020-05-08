@@ -24,6 +24,12 @@ a {
     text-decoration: none;
 }
 
+input {
+    padding: 7px;
+    margin: 60px;
+    font-size: 15px;
+}
+
 .disclaimer {
     font-size: 14px;
     color: grey;
