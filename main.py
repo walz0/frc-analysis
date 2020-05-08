@@ -3,6 +3,8 @@
         - Sort team data into groups based on state_prov (participated and not)
             - Use a dictionary
         - Determine which teams have played the most events (more than 1)
+        - A list of all states / territories as links that display a chart of
+          percent participated. Optional button to view all teams participated / not.
 
 
 Total Events Scheduled:  193
@@ -48,6 +50,7 @@ FRC Data error:
 
 import requests
 from bs4 import BeautifulSoup
+import json
 import pprint
 
 
@@ -204,7 +207,20 @@ def getSuspendedEvents(year):
 
 total_teams = 3898 # total number of active frc teams (2020)
 
-print(len(getAllTeams(2020)))
+teams_dict = {}
+
+teams = getAllTeams(2020)
+for team in teams:
+    if team.state in teams_dict:
+        teams_dict[team.state] += [team.key]
+    else:
+        teams_dict[team.state] = [team.key]
+
+pprint.pprint(teams_dict)
+with open('teams_by_state.json', 'w') as json_file:
+    json.dump(teams_dict, json_file)
+
+# print(len(getStateTeams('Hawaii', 2020)))
 
 # pprint.pprint(getAllTeams(2020))
 #print(getStateTeams('Indiana', 2020))
