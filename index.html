@@ -42,6 +42,8 @@
             </p>
             <div class="search-container">
                 <input type="text" id="search" onkeyup="fillDropdown(document.getElementById('search').value)" autocomplete="off"></input>
+                <div id="filter">
+                </div>
             </div>
             <p class="disclaimer" style="margin: 100px 21vw 50px 21vw; text-align: center;">Written by Aidan Walz, Team 5484 alumni - 2020</p>
         </div>
@@ -62,26 +64,41 @@
 
             function fillDropdown(query) {
                 var keys = getTerritoryNames();
-                var search = document.getElementById('search');
-                while(search.firstChild) {
-                    search.removeChild(search.lastChild);
+                var filter = document.getElementById('filter');
+                while(filter.firstChild) {
+                    filter.removeChild(filter.lastChild);
                 }
-                if(keys.includes(query)) {
+                var similar = findSimilar(keys, query);
+                for (key in similar) {
                     var a = document.createElement('a');
-                    var text = document.createTextNode(query);
+                    var text = document.createTextNode(similar[key]);
                     a.appendChild(text);
                     a.href = "";
-                    search.appendChild(a);
+                    a.className = "list-item";
+                    filter.appendChild(a);
                 }
-                // for (key in keys) {
-                //     if (keys[key] == query) {
-                //         var a = document.createElement('a');
-                //         var text = document.createTextNode(keys[key]);
-                //         a.appendChild(text);
-                //         a.href = "";
-                //         search.appendChild(a);
-                //     }
-                // }
+                if (similar.length == 0) {
+                    filter.style.border = "none";
+                }
+                else {
+                    filter.style.border = "solid";
+                    filter.style.borderWidth = "1px";
+                    filter.style.borderColor = "grey";
+                    filter.style.height = 'auto';
+                }
+            }
+
+            function findSimilar(list, query) {
+                output = [];
+                if (query.length > 1) {
+                    for (item in list) {
+                        portion = list[item].toLowerCase().slice(0, query.length);
+                        if (portion == query.toLowerCase()) {
+                            output.push(list[item]);
+                        }
+                    }
+                }
+                return output;
             }
 
             fetch('./teams_by_state.json')
