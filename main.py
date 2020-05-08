@@ -1,16 +1,22 @@
 """
     TODO:
-        -scraper for district data
-            -compare team counts on tba and scraper
-                -determine what teams are the discrepancy
+        - Sort team data into groups based on state_prov (participated and not)
+            - Use a dictionary
+        - Determine which teams have played the most events (more than 1)
 
 
 Total Events Scheduled:  193
 Total Events Suspended:  131
 Percent Suspended:  67.88
+Total Teams Registered 2020: 3912
 Total Teams Participated:  2183
-Total Percent Participated:  56.0
+Total Teams Not Participated: 1729
+Total Percent Participated:  55.802
 Total Indiana Teams Participated:  35
+
+DATA TO COLLECT:
+    list of all events in 2020
+    list of all teams in 2020 (participated and not)
 
 FRC Data error:
     frc135, frc3494, frc829
@@ -131,10 +137,10 @@ def getCompetedStateTeams(state_prov, year):
     return output 
 
 """
-    :: Gets all teams from all events in given year
+:: Gets all teams from all events in given year
         
-    ERROR: repeated team_obj, maybe duplicate events?
-            look into threads / parallel calls / async calls
+ERROR: repeated team_obj, maybe duplicate events?
+        look into threads / parallel calls / async calls
 """
 def getAllTeams(year):
     output = []
@@ -147,7 +153,6 @@ def getAllTeams(year):
             team_obj = frc_team(team['key'], team['name'], team['state_prov'])
             if not team_obj.key in [o.key for o in output]:
                 output.append(team_obj)
-                print(team_obj)
     return output 
 
 
@@ -199,7 +204,9 @@ def getSuspendedEvents(year):
 
 total_teams = 3898 # total number of active frc teams (2020)
 
-pprint.pprint(getAllTeams(2020))
+print(len(getAllTeams(2020)))
+
+# pprint.pprint(getAllTeams(2020))
 #print(getStateTeams('Indiana', 2020))
 
 #print("Total Events Scheduled: ", len(all_events))

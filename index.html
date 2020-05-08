@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <title>FRC Analysis</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="chart-container" style="width: 400px; height: 400px; margin-bottom: 160px">
+                <p style="font-size: 20px">FRC Events Scheduled for 2020 Season</p>
+                <canvas id="eventSuspended" width="200" height="200"></canvas>
+                <p class="disclaimer">All data gathered from <a href="https://www.thebluealliance.com/apidocs">The Blue Alliance API</a></p>
+            </div>
+            <p style="margin: 0 21vw 0 21vw">
+                The figure above shows a 67.88% suspension rate for FRC events in the 2020 Season. There were
+                193 events scheduled for Infinite Recharge, sadly due to complications from COVID-19
+                only 62 events were conducted during weeks 1 and 2 of competition. These numbers may not be shocking 
+                considering how early into the season FIRST chose to suspend all events, but the data regarding 
+                the teams affected is much more alarming. Since the suspension of all events on 
+                <a href="https://www.firstinspires.org/covid-19">March 12</a>, many teams have been left in limbo 
+                regarding whether or not their robot will ever touch the gray carpet. It is unfortunate that
+                this our situation, because the results of the hard work of many teams was ultimately (and unknowingly) 
+                hinged upon if they decided to compete before or after week 2. In this
+                article I hope to illustrate exactly how much damage has been dealt, and which teams have an
+                advantage going into off-season events (or possibly postponed FIRST sponsored events).
+            </p>
+            <div class="chart-container" style="width: 400px; height: 400px; margin: 80px 0 200px 0">
+                <p style="font-size: 20px">FRC Teams that have Attended an Event in 2020 Season</p>
+                <canvas id="teamsPlayed" width="200" height="200"></canvas>
+                <p class="disclaimer">All data gathered from <a href="https://www.thebluealliance.com/apidocs">The Blue Alliance API</a></p>
+            </div>
+            <p style="margin: 0 21vw 0 21vw">
+                There are exactly 3,912 teams that have registered for the 2020 Season. As the figure above shows, 1,729
+                teams were scheduled to attend an event, but did not attend within the first two weeks
+                of competition. This is a staggering 44% of teams that have yet to play a single match of Infinite Recharge.
+                The difference between having one or two events worth of experience versus not playing at all
+                is a stark one, so it is important to know what we're up against in the coming months. Those who have played will
+                certainly have an advantage over those who have not; how much of an advantage is impossible to say.
+                What we can do now is take a look at the data and assess our situation from afar to gain some
+                insight on the regions most affected.
+            </p>
+            <p class="disclaimer" style="margin: 100px 400px 50px 400px; text-align: center;">Written by Aidan Walz, Team 5484 alumni - 2020</p>
+        </div>
+        <script>
+            var ctx = document.getElementById('eventSuspended').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Postponed', 'Completed'],
+                    datasets: [{
+                        // label: 'FRC Events Scheduled',
+                        data: [193, 131],
+                        backgroundColor: [
+                            'rgba(255, 99, 132)',
+                            'rgba(54, 162, 235)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    
+                }
+            });
+
+            var ctx = document.getElementById('teamsPlayed').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Attended', 'Did not attend'],
+                    datasets: [{
+                        // label: 'FRC Events Scheduled',
+                        data: [2183, 1729],
+                        backgroundColor: [
+                            'rgba(255, 175, 36)',
+                            'rgba(119, 41, 255)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 175, 36, 1)',
+                            'rgba(119, 41, 255, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    
+                }
+            });
+        </script>
+    </body>
+</html>
