@@ -1,24 +1,7 @@
 """
     TODO:
-        - Sort team data into groups based on state_prov (participated and not)
-            - Use a dictionary
         - Determine which teams have played the most events (more than 1)
-        - A list of all states / territories as links that display a chart of
-          percent participated. Optional button to view all teams participated / not.
-
-
-Total Events Scheduled:  193
-Total Events Suspended:  131
-Percent Suspended:  67.88
-Total Teams Registered 2020: 3912
-Total Teams Participated:  2183
-Total Teams Not Participated: 1729
-Total Percent Participated:  55.802
-Total Indiana Teams Participated:  35
-
-DATA TO COLLECT:
-    list of all events in 2020
-    list of all teams in 2020 (participated and not)
+        - Option view all teams participated / not.
 
 FRC Data error:
     frc135, frc3494, frc829
