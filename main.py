@@ -209,16 +209,21 @@ total_teams = 3898 # total number of active frc teams (2020)
 
 teams_dict = {}
 
-teams = getAllTeams(2020)
-for team in teams:
-    if team.state in teams_dict:
-        teams_dict[team.state] += [team.key]
-    else:
-        teams_dict[team.state] = [team.key]
+with open('region_totals.json') as file:
+    data = json.load(file)
 
-pprint.pprint(teams_dict)
-with open('teams_by_state.json', 'w') as json_file:
-    json.dump(teams_dict, json_file)
+for state in data:
+    teams = getCompetedStateTeams(state, 2020)
+    print(state, len(teams))
+    data[state] += [len(teams)]
+
+# teams_count = {}
+# for state in teams_dict:
+#     teams_count[state] = len(teams_dict[state])
+
+pprint.pprint(data)
+with open('temp.json', 'w') as json_file:
+    json.dump(data, json_file)
 
 
 # print(len(getStateTeams('Hawaii', 2020)))

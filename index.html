@@ -40,27 +40,86 @@
                 What we can do now is take a look at the data and assess our situation from afar to gain some
                 insight on the regions most affected.
             </p>
+            <p style="font-size: 20px; margin: 50px 21vw -30px 21vw; display: flex; justify-content: center;">
+                Enter your state / province below to view participation statistics
+            </p>
             <div class="search-container">
-                <input type="text" id="search" onfocusout="hideDropdown()" onfocus="showDropdown()" onkeyup="fillDropdown(document.getElementById('search').value)" autocomplete="off"></input>
+                <input type="text" id="search" onfocus="showDropdown()" onkeyup="fillDropdown(document.getElementById('search').value)" autocomplete="off"></input>
                 <div id="filter"></div>
+            </div>
+            <div id="display-cont" class="chart-container" style="width: 400px; height: 400px; margin: 80px 0 200px 0; display: none">
+                <p id="chartTitle" style="font-size: 20px"></p>
+                <p id="displayDisclaimer" class="disclaimer">All data gathered from <a href="https://www.thebluealliance.com/apidocs">The Blue Alliance API</a></p>
             </div>
             <p class="disclaimer" style="margin: 100px 21vw 50px 21vw; text-align: center;">Written by Aidan Walz, Team 5484 alumni - 2020</p>
         </div>
         <script>
-            var raw_json = []
-            function setJSON(json) {
-                raw_json = json;
-            }
+            function displayChart(state_prov) {
+                var searchBar = document.getElementById('search');
+                searchBar.value = state_prov;
 
+                // Load reigonal participation data
+                fetch('./region_competed.json')
+                    .then(res => res.json())
+                    .then(data => render(data, state_prov))
+                    .catch(err => console.error(err));
+
+                function render(regionData, state_prov) {
+                    if (document.getElementById('displayChart')) {
+                        document.getElementById('displayChart').remove();
+                    }
+
+                    var canvas = document.createElement('canvas');
+                    canvas.id = 'displayChart';
+                    canvas.width = '200';
+                    canvas.height = '200';
+                    var displayContainer = document.getElementById('display-cont');
+                    var displayDisclaimer = document.getElementById('displayDisclaimer');
+                    displayContainer.insertBefore(canvas, displayDisclaimer);
+
+                    attended = regionData[state_prov][1];
+                    did_not_attend = regionData[state_prov][0] - attended;
+
+                    var chartTitle = document.getElementById('chartTitle');
+                    chartTitle.textContent = state_prov + " FRC Teams that have Attended an Event in 2020 Season"
+                    
+
+                    var ctx = document.getElementById('displayChart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Attended', 'Did not attend'],
+                            datasets: [{
+                                data: [attended, did_not_attend],
+                                backgroundColor: [
+                                    'rgba(255, 154, 81)',
+                                    'rgba(81, 133, 255)',
+                                ],
+                                borderColor: [
+                                    'rgba(255, 154, 81, 1)',
+                                    'rgba(81, 133, 255, 1)',
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            
+                        }
+                    });
+                    displayContainer.style.display = 'block';
+                    hideDropdown();
+                }
+            }
+            
             function getTerritoryNames() {
                 var keyList = [];
-                for (key in raw_json) {
+                for (key in searchData) {
                     keyList.push(key)
                 }
                 keyList.sort();
                 return keyList;
             }
-
+            
             function fillDropdown(query) {
                 var keys = getTerritoryNames();
                 var filter = document.getElementById('filter');
@@ -72,7 +131,7 @@
                     var a = document.createElement('a');
                     var text = document.createTextNode(similar[key]);
                     a.appendChild(text);
-                    a.href = "javascript:console.log('test')";
+                    a.href = "javascript:displayChart('" + text.textContent + "')";
                     a.className = "list-item";
                     filter.appendChild(a);
                 }
@@ -86,12 +145,12 @@
                     filter.style.height = 'auto';
                 }
             }
-
+            
             function hideDropdown() {
                 var filter = document.getElementById('filter');
                 filter.style.display = "none";
             }
-
+            
             function showDropdown() {
                 var filter = document.getElementById('filter');
                 filter.style.display = "flex";
@@ -109,10 +168,12 @@
                 }
                 return output;
             }
-
+            
+            var searchData = [];
+            // Load basic team / territory data
             fetch('./teams_by_state.json')
                 .then(res => res.json())
-                .then(data => setJSON(data))
+                .then(data => {searchData = data})
                 .catch(err => console.error(err));
 
             var ctx = document.getElementById('eventSuspended').getContext('2d');

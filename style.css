@@ -28,13 +28,14 @@ input {
     padding: 7px;
     margin-top: 60px;
     font-size: 15px;
+    height: 40px
 }
 
 #filter {
     position: absolute;
-    margin-top: 94px;
+    margin-top: 98px;
     z-index: -1;
-    width: 215px;
+    width: 205px;
     height: auto;
     display: flex;
     flex-wrap: wrap;
@@ -45,7 +46,7 @@ input {
 
 .list-item {
     padding: 8px 8px 8px 8px;
-    width: 215px;
+    width: 205px;
     background: white;
     color: black;
 }
@@ -76,9 +77,9 @@ input {
 .search-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: left;
+    justify-content: center;
     text-align: left;
-    width: 250px;
+    width: 100%;
     height: auto;
     margin-bottom: 90px;
 }
