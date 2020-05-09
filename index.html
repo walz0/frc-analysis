@@ -41,9 +41,8 @@
                 insight on the regions most affected.
             </p>
             <div class="search-container">
-                <input type="text" id="search" onkeyup="fillDropdown(document.getElementById('search').value)" autocomplete="off"></input>
-                <div id="filter">
-                </div>
+                <input type="text" id="search" onfocusout="hideDropdown()" onfocus="showDropdown()" onkeyup="fillDropdown(document.getElementById('search').value)" autocomplete="off"></input>
+                <div id="filter"></div>
             </div>
             <p class="disclaimer" style="margin: 100px 21vw 50px 21vw; text-align: center;">Written by Aidan Walz, Team 5484 alumni - 2020</p>
         </div>
@@ -73,7 +72,7 @@
                     var a = document.createElement('a');
                     var text = document.createTextNode(similar[key]);
                     a.appendChild(text);
-                    a.href = "";
+                    a.href = "javascript:console.log('test')";
                     a.className = "list-item";
                     filter.appendChild(a);
                 }
@@ -88,6 +87,16 @@
                 }
             }
 
+            function hideDropdown() {
+                var filter = document.getElementById('filter');
+                filter.style.display = "none";
+            }
+
+            function showDropdown() {
+                var filter = document.getElementById('filter');
+                filter.style.display = "flex";
+            }
+            
             function findSimilar(list, query) {
                 output = [];
                 if (query.length > 1) {

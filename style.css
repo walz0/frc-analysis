@@ -46,6 +46,13 @@ input {
 .list-item {
     padding: 8px 8px 8px 8px;
     width: 215px;
+    background: white;
+    color: black;
+}
+
+.list-item:hover {
+    background: #eceaea;
+    cursor: default;
 }
 
 .disclaimer {
