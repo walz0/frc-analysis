@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>FRC Analysis</title>
+        <title>The Effects of COVID-19 on FIRST Robotics: An FRC Retrospective</title>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
         <script type="text/javascript" src="teams_by_state.json"></script>
         <link rel="stylesheet" href="style.css">
@@ -41,17 +41,17 @@
                 insight on the regions most affected.
             </p>
             <p style="font-size: 20px; margin: 50px 21vw -30px 21vw; display: flex; justify-content: center;">
-                Enter your state / province below to view participation statistics
+                Enter a state / province below to view participation statistics
             </p>
             <div class="search-container">
                 <input type="text" id="search" onfocus="showDropdown()" onkeyup="fillDropdown(document.getElementById('search').value)" autocomplete="off"></input>
                 <div id="filter"></div>
             </div>
             <div id="display-cont" class="chart-container" style="width: 400px; height: 400px; margin: 80px 0 200px 0; display: none">
-                <p id="chartTitle" style="font-size: 20px"></p>
+                <p id="chartTitle" style="font-size: 20px; margin-top: -10px"></p>
                 <p id="displayDisclaimer" class="disclaimer">All data gathered from <a href="https://www.thebluealliance.com/apidocs">The Blue Alliance API</a></p>
             </div>
-            <p class="disclaimer" style="margin: 100px 21vw 50px 21vw; text-align: center;">Written by Aidan Walz, Team 5484 alumni - 2020</p>
+            <p class="credit">Written by Aidan Walz, Team 5484 alumni - 2020</p>
         </div>
         <script>
             function displayChart(state_prov) {

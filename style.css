@@ -27,6 +27,7 @@ a {
 input {
     padding: 7px;
     margin-top: 60px;
+    margin-bottom: -100px;
     font-size: 15px;
     height: 40px
 }
@@ -34,14 +35,17 @@ input {
 #filter {
     position: absolute;
     margin-top: 98px;
-    z-index: -1;
+    z-index: 1;
     width: 205px;
     height: auto;
+
     display: flex;
     flex-wrap: wrap;
+
     border: solid;
     border-width: 1px;
     border-color: grey;
+
 }
 
 .list-item {
@@ -49,6 +53,7 @@ input {
     width: 205px;
     background: white;
     color: black;
+    opacity: .99;
 }
 
 .list-item:hover {
@@ -61,6 +66,16 @@ input {
     color: grey;
 }
 
+.credit {
+    font-size: 14px;
+    color: grey;
+    background: #eceaea;
+    display: flex; 
+    flex-basis: 100%; 
+    justify-content: center;
+    padding: 30px;
+    margin-top: 50px
+}
 .chart-container {
     text-align:center;
 }

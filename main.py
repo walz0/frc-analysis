@@ -205,36 +205,37 @@ def getSuspendedEvents(year):
     return sus_events
    
 
-total_teams = 3898 # total number of active frc teams (2020)
+if __name__ == "__main__":
+    total_teams = 3898 # total number of active frc teams (2020)
 
-teams_dict = {}
+    teams_dict = {}
 
-with open('region_totals.json') as file:
-    data = json.load(file)
+    with open('region_totals.json') as file:
+        data = json.load(file)
 
-for state in data:
-    teams = getCompetedStateTeams(state, 2020)
-    print(state, len(teams))
-    data[state] += [len(teams)]
+    for state in data:
+        teams = getCompetedStateTeams(state, 2020)
+        print(state, len(teams))
+        data[state] += [len(teams)]
 
-# teams_count = {}
-# for state in teams_dict:
-#     teams_count[state] = len(teams_dict[state])
+    # teams_count = {}
+    # for state in teams_dict:
+    #     teams_count[state] = len(teams_dict[state])
 
-pprint.pprint(data)
-with open('temp.json', 'w') as json_file:
-    json.dump(data, json_file)
+    pprint.pprint(data)
+    with open('temp.json', 'w') as json_file:
+        json.dump(data, json_file)
 
 
-# print(len(getStateTeams('Hawaii', 2020)))
+    # print(len(getStateTeams('Hawaii', 2020)))
 
-# pprint.pprint(getAllTeams(2020))
-#print(getStateTeams('Indiana', 2020))
+    # pprint.pprint(getAllTeams(2020))
+    #print(getStateTeams('Indiana', 2020))
 
-#print("Total Events Scheduled: ", len(all_events))
-#print("Total Events Suspended: ", len(sus_events))
-#print("Percent Suspended: ", round(100 * (len(sus_events) / len(all_events)), 2))
-#
-#print("Total Teams Participated: ", len(active_teams))
-#print("Total Percent Participated: ", round(100 * (len(active_teams) / total_teams), 2))
-#print("Total Indiana Teams Participated: ", len(in_teams))
+    #print("Total Events Scheduled: ", len(all_events))
+    #print("Total Events Suspended: ", len(sus_events))
+    #print("Percent Suspended: ", round(100 * (len(sus_events) / len(all_events)), 2))
+    #
+    #print("Total Teams Participated: ", len(active_teams))
+    #print("Total Percent Participated: ", round(100 * (len(active_teams) / total_teams), 2))
+    #print("Total Indiana Teams Participated: ", len(in_teams))
