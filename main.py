@@ -73,22 +73,22 @@ def tbaAPI(query):
 
 
 # get data from FIRST official leaderboard, incorrect data
-def getIndianaTeams(year):
-    # pull from district ranking leaderboard
-    url = "http://frc-events.firstinspires.org/{}/district/IN".format(year)
-    page = requests.get(url).content
-    soup = BeautifulSoup(page, 'html.parser')
-    rows = soup.table.find_all('tr')[1:]
-    teams = []
-    for row in rows:
-        td = row.find_all('td')
-        td = [x.text.strip() for x in td]
-        raw_name = td[2]
-        played = not (td[3] == td[4])
-        if played:
-            teams.append(frc_team('frc' + raw_name[:4].rstrip(), "", "Indiana"))
-    teamCount = len(rows) - 1 # exclude the column label row
-    return teams
+# def getIndianaTeams(year):
+#     # pull from district ranking leaderboard
+#     url = "http://frc-events.firstinspires.org/{}/district/IN".format(year)
+#     page = requests.get(url).content
+#     soup = BeautifulSoup(page, 'html.parser')
+#     rows = soup.table.find_all('tr')[1:]
+#     teams = []
+#     for row in rows:
+#         td = row.find_all('td')
+#         td = [x.text.strip() for x in td]
+#         raw_name = td[2]
+#         played = not (td[3] == td[4])
+#         if played:
+#             teams.append(frc_team('frc' + raw_name[:4].rstrip(), "", "Indiana"))
+#     teamCount = len(rows) - 1 # exclude the column label row
+#     return teams
 
 
 # get all teams registered from a given state in a given year
@@ -141,7 +141,6 @@ def getAllTeams(year):
                 output.append(team_obj)
     return output 
 
-
 # get all events scheduled for a given year
 def getAllEvents(year): 
     events = tbaAPI('events/' + str(year))
@@ -181,7 +180,7 @@ def getSuspendedEvents(year):
         # differentiate events that took place from suspended events
         if 'SUSPENDED' in event['name']:
             # remove ***SUSPENDED*** and extra space from event name
-            name = event['name'][16:]
+            # name = event['name'][16:]
             sus_events.append(frc_event(event['key'], event['name'], event['week']))
         else:
             com_events.append(frc_event(event['key'], event['name'], event['week']))
@@ -189,25 +188,42 @@ def getSuspendedEvents(year):
    
 
 if __name__ == "__main__":
-    total_teams = 3898 # total number of active frc teams (2020)
 
-    teams_dict = {}
+    events = getAllEvents(2020);
 
-    with open('region_totals.json') as file:
-        data = json.load(file)
+    output = {} 
 
-    for state in data:
-        teams = getCompetedStateTeams(state, 2020)
-        print(state, len(teams))
-        data[state] += [len(teams)]
+    for event in events:
+        # differentiate events that took place from suspended events
+        teams = tbaAPI('event/' + event.key + '/teams')
+        for team in teams:
+            key = team['key']
+            if key in output:
+                output[key] += [str(event)]
+            else:
+                output[key] = [str(event)]
+            print(output[key])
+
+    with open('teams_w_events.json', 'w') as json_file:
+        json.dump(output, json_file)
+
+    # teams_dict = {}
+
+    # with open('region_totals.json') as file:
+    #     data = json.load(file)
+
+    # for state in data:
+    #     teams = getCompetedStateTeams(state, 2020)
+    #     print(state, len(teams))
+    #     data[state] += [len(teams)]
 
     # teams_count = {}
     # for state in teams_dict:
     #     teams_count[state] = len(teams_dict[state])
 
-    pprint.pprint(data)
-    with open('temp.json', 'w') as json_file:
-        json.dump(data, json_file)
+    # pprint.pprint(data)
+    # with open('temp.json', 'w') as json_file:
+    #     json.dump(data, json_file)
 
 
     # print(len(getStateTeams('Hawaii', 2020)))
