@@ -79,6 +79,9 @@
 
                     attended = regionData[state_prov][1];
                     did_not_attend = regionData[state_prov][0] - attended;
+                    if (did_not_attend < 0) {
+                        did_not_attend = 0;
+                    }
 
                     var chartTitle = document.getElementById('chartTitle');
                     chartTitle.textContent = state_prov + " FRC Teams that have Attended an Event in 2020 Season"
@@ -182,7 +185,7 @@
                 data: {
                     labels: ['Postponed', 'Completed'],
                     datasets: [{
-                        data: [193, 131],
+                        data: [131, 62],
                         backgroundColor: [
                             'rgba(255, 99, 132)',
                             'rgba(54, 162, 235)',
