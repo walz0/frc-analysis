@@ -2,6 +2,7 @@
     TODO:
         - Determine which teams have played the most events (more than 1)
         - Option view all teams participated / not.
+        - Data for list of teams by state that have / have not participated
 
 FRC Data error:
     frc135, frc3494, frc829
@@ -189,28 +190,33 @@ def getSuspendedEvents(year):
 
 if __name__ == "__main__":
 
-    events = getAllEvents(2020);
-
-    output = {} 
-
-    for event in events:
-        # differentiate events that took place from suspended events
-        teams = tbaAPI('event/' + event.key + '/teams')
-        for team in teams:
-            key = team['key']
-            if key in output:
-                output[key] += [str(event)]
-            else:
-                output[key] = [str(event)]
-            print(output[key])
-
-    with open('teams_w_events.json', 'w') as json_file:
-        json.dump(output, json_file)
+    # with open('teams_w_events.json', 'w') as json_file:
+    #     json.dump(output, json_file)
 
     # teams_dict = {}
 
-    # with open('region_totals.json') as file:
-    #     data = json.load(file)
+    print(len(getAllTeams(2020)))
+
+    with open('teams_by_events.json') as file:
+        data = json.load(file)
+
+    teams = {}
+
+    for team in data:
+        for item in data[team]:
+            if not 'SUSPENDED' in item and not 'Championship' in item:
+                if team in teams:
+                    teams[team] += [item]
+                else:
+                    teams[team] = [item]
+
+    for team in teams:
+        if len(teams[team]) > 1:
+            print(team)
+
+    print(len(teams))
+
+
 
     # for state in data:
     #     teams = getCompetedStateTeams(state, 2020)
