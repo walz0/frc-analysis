@@ -195,28 +195,29 @@ if __name__ == "__main__":
 
     # teams_dict = {}
 
-    print(len(getAllTeams(2020)))
-
     with open('teams_by_events.json') as file:
-        data = json.load(file)
+        teams_by_events = json.load(file)
+
+    with open('teams_by_state.json') as file:
+        teams_by_state = json.load(file)
 
     teams = {}
 
-    for team in data:
-        for item in data[team]:
-            if not 'SUSPENDED' in item and not 'Championship' in item:
-                if team in teams:
-                    teams[team] += [item]
-                else:
-                    teams[team] = [item]
+    for state in teams_by_state:
+        for team in teams_by_state[state]:
+            if state in teams:
+                teams[state] += [team, teams_by_events[team]]
+            else:
+                teams[state] = [team, teams_by_events[team]]
 
-    for team in teams:
-        if len(teams[team]) > 1:
-            print(team)
+    with open('teams_by_state_and_events.json', 'w') as file:
+        json.dump(teams, file)
 
-    print(len(teams))
+    pprint.pprint(teams)
 
-
+    # for week in data:
+    #     if week[-2:] != 'ed':
+    #         print(week, len(data[week]))
 
     # for state in data:
     #     teams = getCompetedStateTeams(state, 2020)

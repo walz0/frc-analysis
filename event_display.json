@@ -1,6 +1,20 @@
 {
     "Week0":[
         [
+            "2020week0",
+            "Week 0"
+        ],
+        [
+            "2020mnwcw",
+            "West Central Week 0"
+        ],
+        [
+            "2020srrc",
+            "Seven Rivers Robotics Coalition Week Zero"
+        ]
+    ],
+    "Week1":[
+        [
             "2020caln",
             "Los Angeles North Regional"
         ],
@@ -93,7 +107,7 @@
             "PNW District Glacier Peak Event"
         ]
     ],
-    "Week1":[
+    "Week2":[
         [
             "2020arli",
             "Arkansas Regional"
@@ -219,7 +233,7 @@
             "PNW District West Valley Event"
         ]
     ],
-    "Week2":[
+    "Week3":[
         [
             "2020ausc",
             "***SUSPENDED*** Southern Cross Regional"
@@ -345,7 +359,7 @@
             "***SUSPENDED*** CHS District Portsmouth VA Event - See Site Info Document"
         ]
     ],
-    "Week3":[
+    "Week4":[
         [
             "2020ausp",
             "***SUSPENDED*** South Pacific Regional"
@@ -495,7 +509,7 @@
             "***SUSPENDED*** Wisconsin Regional"
         ]
     ],
-    "Week4":[
+    "Week5":[
         [
             "2020cada",
             "***SUSPENDED*** Sacramento Regional"
@@ -613,7 +627,7 @@
             "***SUSPENDED*** PNW District Auburn Event"
         ]
     ],
-    "Week5":[
+    "Week6":[
         [
             "2020abca",
             "***SUSPENDED*** Canadian Rockies Regional"
@@ -727,7 +741,7 @@
             "***SUSPENDED*** Seven Rivers Regional"
         ]
     ],
-    "Week6":[
+    "Week7":[
         [
             "2020micmp",
             "***SUSPENDED*** Michigan State Championship"
@@ -745,13 +759,13 @@
             "***SUSPENDED*** Festival de Robotique a Montreal Regional"
         ]
     ],
-    "Week7":[
-
-    ],
     "Week8":[
 
     ],
     "Week9":[
+
+    ],
+    "Week10":[
         [
             "2020award",
             "2020 Award Winners"
@@ -775,20 +789,8 @@
             "FACC Ri3D Competition"
         ],
         [
-            "2020mnwcw",
-            "West Central Week 0"
-        ],
-        [
             "2020nyrra",
             "Rochester Rally"
-        ],
-        [
-            "2020srrc",
-            "Seven Rivers Robotics Coalition Week Zero"
-        ],
-        [
-            "2020week0",
-            "Week 0"
         ],
         [
             "2020wiss",
